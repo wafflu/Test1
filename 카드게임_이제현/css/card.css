@@ -1,0 +1,393 @@
+img{
+    width: 100px;
+    height: 150px;
+}
+
+html, body {
+    width: 100%;
+	height: 100%;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+    background-image: url("../img/bg.jpeg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#card_box{
+    /* position: relative;
+    top: 0;
+    left: 0; */
+    width: 1300px;
+    margin: 0 auto;
+}
+#header{
+    width: 1300px;
+    height: 150px;
+    position: relative;
+    margin: 0 auto;
+    display: none;
+}
+
+#board{
+    width: 240px;
+    height: 50px;
+    padding: 20px 10px;
+    margin: 20px auto 0;
+    background-color: #fff;
+    border-radius: 10px;
+}
+
+.h2{
+    text-align: center;
+    font-size: 20px;
+    margin-bottom: 0;
+}
+.h2_t{
+    margin: 0;
+    text-align: center;
+    font-size: 30px;
+    display: inline-block;
+    width: 80px;
+    height: 50px;
+    line-height: 54px;
+    box-sizing: border-box;
+}
+
+#time{
+    padding-left: 50px;
+    background-image: url("../img/timer.png");
+    background-repeat: no-repeat;
+}
+
+#score{
+    margin-left: 60px;
+    height: 45px;
+    padding-left: 38px;
+    background-image: url("../img/back.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#btn_box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 350px;
+    transform: translate(-100px, -175px);
+}
+
+#menu{
+    position: absolute;
+    left: 0;top: 15px;
+}
+
+.img_css, .img_css2{
+    margin: 0;
+    padding: 0;
+    height: 80px;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+#btn_chance{
+    width: 65px;
+    padding-left: 10px;
+    background-image: url("../img/chance.png");
+}
+
+#chance_count{
+    position: absolute;
+    left: 65px;
+    bottom: 9px;
+    display: inline-block;
+    width: 30px;
+    height: 20px;
+    font-size: 20px;
+    margin: 0;
+}
+
+#btn_reset{
+    margin-left: 40px;
+    width: 80px;
+    background-image: url("../img/reset.png");
+}
+
+.popup_btn_box{
+    width: 140px;
+    margin: 20px auto;
+}
+
+.img_css2{
+    width: 40px;
+    height: 40px;
+}
+#btn_reset2{
+    margin: 0 10px;
+    background-image: url("../img/reset2.png");
+}
+
+#btn_exit{
+    margin: 0 10px;
+    background-image: url("../img/Exit.png");
+}
+
+.c1_img{
+    width: 129px;
+    padding-left: 40px;
+}
+
+#btn_start{
+    margin-top: 20px;
+    width: 200px;
+    height: 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 20px;
+    color: #fff;
+    background-color: #0cf;
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    z-index: 1;
+    cursor: pointer;
+}
+#btn_start::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    z-index: -2;
+}
+
+#btn_start::after{
+    position: absolute;
+    left: 0;
+    top: 0;
+    content: "";
+    width: 0%;
+    height: 100%;
+    background-color: #008fb3;
+    opacity: 0.5;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: -1;
+    transition: all .3s;
+}
+
+#btn_start:hover::after{
+    width: 100%;
+    transition: all .3s;
+}
+
+#namebox{
+    width: 186px;
+    height: 50px;
+    border: 1px solid #000;
+    border-radius: 5px;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+#playername{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-75px, -9px);
+    width: 150px;
+    height: 18px;
+    border: none;
+    background-color: transparent;
+}
+
+#playername::placeholder{
+    font-size: 12px;
+    text-align: center;
+    color: #000;
+}
+
+#playername:focus{
+    outline: none;
+}
+
+#popup_box{
+    width: 350px;
+    height: 400px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-175px, -200px);
+    background-color: #fff;
+    border-radius: 20px;
+    border: 4px solid rgb(146, 202, 215);
+    display: none;
+    z-index: 1;
+}
+
+#c2_img{
+    width: 100px;
+    height: 150px;
+    position: absolute;
+    left: 0;
+    bottom: -50px;
+    transform: translate(-50px, 0);
+    z-index: -1;
+}
+
+
+#RankTable{
+    margin: 0 auto;
+    padding-top: 20px;
+    z-index: 1;
+}
+
+#RankTable>tbody>tr>th{
+    font-size:25px;
+    width: 100px;
+    text-align: center;
+}
+
+#RankTable>tbody>tr>td{
+    text-align: center;
+}
+
+.hintcard {
+    box-sizing: border-box;
+    border: 4px solid rgba(255, 255, 255, 0);  
+    animation: spin 1.5s ease-out infinite;
+    border-radius: 5px;
+}
+
+@keyframes spin {
+    0%
+    {
+        border-top-color: #d0145c;
+    }
+    35%
+    {
+        border-right-color: #d0145c;
+    }
+    70%
+    {
+        border-bottom-color: #d0145c;
+    }
+    100%
+    {
+        border-left-color: #d0145c;
+    }
+}
+
+#modebox{
+    width: 200px;
+    height: 50px;
+    margin: 0 auto;
+}
+
+#NormalMode{
+    margin-left: 8px;
+}
+
+.mode{
+    display: inline-block;
+    width: 90px;
+    height: 40px;
+    background-color: #0cf;
+    text-align: center;
+    line-height: 40px;
+    color:#fff;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 15px;
+
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.mode::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    z-index: -2;
+}
+
+.mode::after{
+    position: absolute;
+    left: 0;
+    top: 0;
+    content: "";
+    width: 0%;
+    height: 100%;
+    background-color: #008fb3;
+    opacity: 0.5;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: -1;
+    transition: all .3s;
+}
+
+.mode:hover::after{
+    width: 100%;
+    transition: all .3s;
+}
+
+.checkMode{
+    background-color: #008fb3;
+}
+
+#msgbox{
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+#msg{
+    position: relative;
+    margin: 0;
+    padding-top: 26px;
+    display: inline-block;
+    width: 300px;
+    height: 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    line-height: 0px;
+}
+
+#msg::after{
+    content: '';
+	position: absolute;
+	right: 0;
+	top: 50%;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-left-color: rgba(255, 255, 255, 0.7);;
+	border-right: 0;
+	margin-top: -10px;
+	margin-right: -10px;
+}
+
+#msg_img{
+    /* width: 80px; */
+    height: 100px;
+}
+
+.msgboxon{
+    display: none;
+}

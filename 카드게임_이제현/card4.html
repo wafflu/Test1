@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/card.css">
+</head>
+<body>
+    <div id="header">
+        <div id="board">
+            <p class="h2_t" id="time">00:00</p>
+            <p class="h2_t" id="score">x 0</p>
+        </div>
+        <div id="menu">
+            <button id="btn_chance" class="img_css"></button>
+            <p id="chance_count">x 0</p>
+            <button id="btn_reset" class ="img_css"></button>
+        </div>
+        <div id="msgbox" class="msgboxon">
+            <p id="msg"></p>
+            <img src="./img/msg.png" alt="" id="msg_img">
+        </div>
+    </div>
+    <div id="btn_box">
+        <img src="./img/c1.png" alt="핸더 마스코트" class="c1_img">
+        <div id="modebox">
+            <div id="NormalMode" class="mode">일반모드</div>
+            <div id="ChallengeMode" class="mode">도전모드</div>
+        </div>
+        <div id = "namebox">
+            <input type="text" id="playername" placeholder="플레이어명을 입력해주세요" maxlength="10" autocomplete='off'>
+        </div>
+        <button id="btn_start">Game Start</button>
+    </div>
+
+    <div id="popup_box">
+        <img src="./img/c2.png" alt="c2.img" id="c2_img">
+        <table id="RankTable">
+            <tr>
+                <th>순위</th>
+                <th>이름</th>
+                <th>시간</th>
+                <th>점수</th>
+            </tr>
+        </table>
+        <div class="popup_btn_box">
+            <button id ="btn_reset2" class ="img_css2"></button>
+            <button id ="btn_exit" class="img_css2"></button>
+        </div>
+    </div>
+
+    <script>
+        const btn_start = document.getElementById("btn_start");
+        const card_box = document.createElement("div");
+        const imgs = document.getElementsByClassName("card_img");
+        const btn_box = document.getElementById("btn_box");
+        const playername = document.getElementById("playername");
+        const header_id = document.getElementById("header");
+        const TIMER = document.getElementById("time");
+        const btn_chance = document.getElementById("btn_chance");
+        const btn_NormalMode = document.getElementById("NormalMode");
+        const btn_ChallengeMode = document.getElementById("ChallengeMode");
+        const chance_count = document.getElementById("chance_count");
+        const msgbox = document.getElementById("msgbox");
+        const msg = document.getElementById("msg");
+
+        const Rankbox = document.getElementById("popup_box");
+        const tbody = document.getElementsByTagName("tbody");
+
+        let intervalId; // 인터벌변수 const로 해야함 - 타이머
+        
+        let t;
+
+        function card(number, kind, color, status, clear, index) {
+            this.number = number;
+            this.kind = kind;
+            this.color = color;
+            this.status = status;
+            this.clear = clear;
+            this.index = index;
+
+            this.getCard = function(){
+                return this.kind+this.number;
+            }
+
+            //카드 뒤집기 상태
+            this.setStatus = function(status){
+                this.status = status;
+            }
+            this.getStatus = function(){
+                return this.status;
+            }
+
+            //카드 이미지 넘버
+            this.getImgNum = function(){
+                return this.index;
+            }
+
+            //카드 색상
+            this.getColor = function(){
+                return this.color;
+            }
+
+            //카드 넘버
+            this.cardNum = function(){
+                return this.number;
+            }
+
+            //클리어
+            this.setClear = function(clear){
+                this.clear = clear;
+            }
+            this.getClear = function(){
+                return this.clear;
+            }
+        }
+
+        function time(Minute, Second){
+            this.Minute = Minute;
+            this.Second = Second;
+
+            this.setMinute = function(Minute){
+                this.Minute = Minute;
+            }
+            this.getMinute = function(){
+                return this.Minute;
+            }
+
+            this.setSecond = function(Second){
+                this.Second = Second;
+            }
+            this.getSecond = function(){
+                return this.Second;
+            }
+        }
+
+        function player(time, score, name, before_card, chance, mode){
+            this.time = time;
+            this.score = score;
+            this.name = name;
+            this.before_card = before_card;
+            this.chance = chance;
+            this.chancetime = true;
+            this.mode = mode;
+
+            this.setTime = function(time){
+                this.time = time;
+            }
+            this.getTime = function() {
+                return this.time;
+            }
+
+            this.setScore = function(score){
+                this.score = score;
+            }
+            this.getScore = function() {
+                return this.score;
+            }
+
+            this.setName = function(name){
+                this.name = name;
+            }
+            this.getName = function() {
+                return this.name;
+            }
+
+            this.setBefore = function(before_card){
+                this.before_card = before_card;
+            }
+            this.getBefore = function() {
+                return this.before_card;
+            }
+
+            //찬스횟수
+            this.setHintcount = function(chance){
+                this.chance = chance;
+            }
+            this.getHintcount = function() {
+                return this.chance;
+            }
+
+            //찬스 딜레이용도
+            this.setChanceDealy = function(chance){
+                this.chancetime = chance;
+            }
+            this.getChanceDealy = function() {
+                return this.chancetime;
+            }
+
+            //모드
+            this.setMode = function(mode){
+                this.mode = mode;
+            }
+            this.getMode = function(){
+                return this.mode;
+            }
+
+        }
+        
+        function info(){
+            let localarr = []; // 로컬 배열
+            this.start = false;
+
+            this.Addlocal = function(local){
+                localarr.push(local);
+            }
+
+            this.getLocal = function(){
+                return localarr;
+            }
+
+            this.popLocal = function(){
+                localarr.pop();
+            }
+
+            this.Addlocal2 = function(local){
+                localarr.unshift(local);
+            }
+
+            this.Addlocal3 = function(local, value){
+                localarr.splice(local, 0, value);
+            }
+
+            this.setStart = function(value){
+                this.start = value;
+            }
+            this.getStart = function(){
+                return this.start;
+            }
+        }
+        
+        //타이머 초기화
+        const Timer = new time(0, 0);
+        const Player = new player("", 0, "", -1, 5, "NormalMode");
+
+        const c_deck = makeDeck();
+        const INFO = new info(); // 로컬배열 로딩
+
+        btn_NormalMode.classList.add("checkMode");
+
+        const btn_reset = document.getElementById("btn_reset");
+        const btn_reset2 = document.getElementById("btn_reset2");
+        const btn_exit = document.getElementById("btn_exit");
+
+        //게임창 다시하기
+        btn_reset.onclick = function(){
+            if(!INFO.getStart()){
+                reset();
+            }
+        }
+
+        //팝업창 다시하기
+        btn_reset2.onclick = function(){
+            Rankbox.style.display = "none";
+            reset();
+        }
+
+        //페이지 새로고침(나가기)
+        btn_exit.onclick = function(){
+            location.reload(true);
+        }
+
+        //모드선택
+        btn_NormalMode.onclick = function(){
+            btn_ChallengeMode.classList.remove("checkMode");
+            btn_NormalMode.classList.add("checkMode");
+            Player.setMode("NormalMode");
+        }
+        btn_ChallengeMode.onclick = function(){
+            btn_NormalMode.classList.remove("checkMode");
+            btn_ChallengeMode.classList.add("checkMode");
+            Player.setMode("ChallengeMode");
+        }
+
+        //시작버튼
+        btn_start.onclick = function(){
+            if(playername.value === ''){
+                alert("플레이어명을 입력해주세요.");
+                return;
+            }
+            shuffle();
+            //카드 진열하는 판 만들기
+            card_box.id = "card_box";
+            document.body.appendChild(card_box);
+            for(let i = 0; i<c_deck.length; i++){
+                let card_img = document.createElement("img");
+                let sel_box = document.getElementById("card_box");
+                card_img.setAttribute("src", `./card_img/${c_deck[i].getImgNum()}.png`);
+                card_img.id = c_deck[i].getCard();
+                card_img.classList.add("card_img");
+                sel_box.appendChild(card_img);
+            }
+
+            //스타트 버튼과 닉네임 입력 버튼 삭제
+            document.body.removeChild(btn_box);
+            btn_box.removeChild(btn_start);
+            Player.setName(playername.value);
+            //스타트 버튼과 닉네임 입력 버튼 삭제
+
+            //헤더 스타일 on
+            header_id.style.display = "block";
+            chance_count.innerHTML = "x "+Player.getHintcount();
+
+            //처음 로컬스토레지 값 배열에 담기
+            Load_localStorage();
+
+            //타이머 시작
+            if(!INFO.getStart()){
+                StartDelay(3000);
+            }
+        }
+
+        //카드 클릭
+        card_box.onclick = function(e){
+            let sel
+            if(INFO.getStart()){
+                console.log("선택불가");
+                return;
+            }
+            //카드 인덱스 찾기용
+            for(let i = 0; i<c_deck.length; i++){
+                if(imgs.item(i).id === e.target.id){
+                    sel = i;
+                }
+            }
+
+            //힌트카드 클래스 제거용도
+            let Hintcard = document.getElementById(e.target.id);
+            if(Hintcard.getAttribute("class").substr(9, 10) === "hintcard"){
+                Hintcard.classList.remove("hintcard");
+            }
+
+            if(Player.getBefore() !== -1 && Player.getBefore() !== sel){
+                if(!c_deck[sel].getClear()){
+                    checkCard(Player.getBefore(), sel);
+                }
+            } else {
+                if(!c_deck[sel].getClear()){
+                    Flip(sel);
+                }
+            }
+        }
+
+        //힌트버튼
+        btn_chance.onclick = function(){
+            if(Player.getBefore() != -1) {
+                if(parseInt(Player.getHintcount()) == 0){
+                    PopupMsg(1, "힌트를 다 사용했어!");
+                    return;
+                }
+
+                if(!Player.getChanceDealy()){
+                    PopupMsg(1, "찬스를 너무 빨리 누르는거 같아!");
+                    return;
+                }
+                
+                for(i in c_deck){
+                    if(c_deck[i].getCard() !== c_deck[Player.getBefore()].getCard()){
+                        if(c_deck[i].getColor() == c_deck[Player.getBefore()].getColor()
+                            && c_deck[i].cardNum() == c_deck[Player.getBefore()].cardNum()
+                        ) {
+                            if(!c_deck[i].getClear()){
+                                let hintcard = document.getElementById(c_deck[i].getCard());
+                                if(!hintcard.getAttribute("class").includes("hintcard")){
+                                    Player.setHintcount(parseInt(Player.getHintcount()) - 1);
+                                    chance_count.innerHTML = "x "+Player.getHintcount();
+                                }
+
+                                hintcard.classList.add("hintcard");
+                                break;
+                            }
+                        }
+                    }
+                }
+                Delay(2000);
+            } else {
+                PopupMsg(1, "카드 하나를 선택후 힌트를 사용해봐");
+            }
+        }
+
+        //카드덱 만들기
+        function makeDeck(){
+            let carddeck = [];
+
+            const kind = ["Dia", "Clover", "Hart", "Space"];
+            const color = ["red", "dark", "red", "dark"];
+            
+            let cc = 0; // 카드무늬 번호용
+            let card_num = 1; // 카드 번호용
+
+            for(let i = 0; i<52; i++){
+                if(i!=0 && i%13 == 0){
+                    cc++;
+                    card_num = 1;
+                }
+                carddeck.push(new card(card_num, kind[cc], color[cc], 0, false, i));
+                card_num++;
+            }
+
+            return carddeck;
+        }
+
+        //카드 덱 섞기
+        function shuffle(){
+            c_deck.sort(()=>{
+                return Math.random() - 0.5
+            })
+        }
+
+        //카드 뒤집기
+        function Flip(sel){
+            if(c_deck[sel].getStatus() === 0){
+                c_deck[sel].setStatus(1);
+                Player.setBefore(sel);
+                imgs[sel].setAttribute("src", `./card_img/${c_deck[sel].getImgNum()}.png`);
+            } else {
+                Player.setBefore(-1);
+                c_deck[sel].setStatus(0);
+                Timeout(100, sel);
+
+            }
+        }
+
+        //카드 체크용
+        function checkCard(card1, card2){
+            let score_tag = document.getElementById("score");
+            if((c_deck[card1].getColor() == c_deck[card2].getColor()) && (c_deck[card1].cardNum() == c_deck[card2].cardNum())){
+                c_deck[card1].setClear(true);
+                c_deck[card2].setClear(true);
+                c_deck[card2].setStatus(1);
+                imgs[card2].setAttribute("src", `./card_img/${c_deck[card2].getImgNum()}.png`);
+                Player.setScore(Player.getScore()+1);
+                score_tag.innerHTML = "x "+Player.getScore();
+                if(Player.getScore() == 2){
+                    clear();
+                }
+            } else {
+                c_deck[card1].setStatus(0);
+                Timeout2(500, card1, card2);
+            }
+            Player.setBefore(-1);
+        }
+
+        //타이머 관련
+
+        //아래 카드 뒤집기 딜레이용 타임
+        function Timeout(time, sel){
+            imgs[sel].setAttribute("src", `./card_img/${c_deck[sel].getImgNum()}.png`);
+            setTimeout(() => 
+            imgs[sel].setAttribute("src", `./card_img/back.png`)
+            , time);
+        }
+
+        function Timeout2(time, card1, card2){
+            imgs[card1].setAttribute("src", `./card_img/${c_deck[card1].getImgNum()}.png`);
+            imgs[card2].setAttribute("src", `./card_img/${c_deck[card2].getImgNum()}.png`);
+            setTimeout(() => {
+                imgs[card1].setAttribute("src", `./card_img/back.png`);
+                imgs[card2].setAttribute("src", `./card_img/back.png`);
+            }
+            , time);
+        }
+
+        function StartDelay(time){
+            INFO.setStart(true);
+            if(Player.getMode() !== "NormalMode"){
+                TIMER.innerHTML = "03:00";
+                Timer.setMinute(1);
+                Timer.setSecond(0);
+            }
+            setTimeout(() => {
+                for(let i = 0; i<c_deck.length; i++){
+                    imgs[i].setAttribute("src", `./card_img/back.png`)
+                }
+                INFO.setStart(false);
+                startTime();
+            }
+            , time);
+        }
+
+        function startTime() {
+            intervalId = setInterval(() => {
+                if(Player.getMode() === "NormalMode"){
+                    Timer.setSecond(Timer.getSecond()+1); 
+                    if(Timer.getSecond() == 60){
+                        Timer.setMinute(Timer.getMinute()+1);
+                        Timer.setSecond(0);
+                    }
+                } else {
+                    if(Timer.getSecond() == 0){
+                        Timer.setMinute(Timer.getMinute()-1);
+                        Timer.setSecond(60); 
+                    }
+                    Timer.setSecond(Timer.getSecond()-1); 
+                    if(Timer.getMinute() == 0 && Timer.getSecond() == 0){
+                        clear();
+                    }
+                }
+                
+                let H = Timer.getMinute() < 10 ? "0"+Timer.getMinute() : Timer.getMinute();
+                let M = Timer.getSecond() < 10 ? "0"+Timer.getSecond() : Timer.getSecond();
+                TIMER.innerHTML = H+":"+M;
+            }, 1000);
+        }
+
+        function Timestop(){
+            clearInterval(intervalId);
+        }
+
+        function clear(){
+            INFO.setStart(true);
+            Player.setScore(Player.getScore());
+            Player.setTime((Timer.getMinute() * 60)+parseInt(Timer.getSecond()));
+            Timestop();
+            openRenk();
+        }
+
+        function Delay(time){
+            if(Player.getChanceDealy()){
+                Player.setChanceDealy(false);
+                setTimeout(() => {
+                    Player.setChanceDealy(true);
+                }, time);
+            }
+        }
+
+        function PopupMsg(time, text){
+            msg.innerHTML=text;
+            msgbox.classList.remove("msgboxon");
+            setTimeout(() => {
+                msgbox.classList.add("msgboxon");
+            }, time*1000);
+        }
+
+
+        //--------------------------------------------------------
+
+        function Load_localStorage(){
+            if(localStorage.length !== 0){
+                //로컬 스토리지에서 데이터 가져오기
+                for(let i = 0; i<localStorage.length; i++){
+                    if(Player.getMode() === "NormalMode"){
+                        player_detail = JSON.parse(localStorage.getItem("NormalMode"+(i+1)));
+                    } else {
+                        player_detail = JSON.parse(localStorage.getItem("ChallengeMode"+(i+1)));
+                    }
+                    if(player_detail !== null){
+                        INFO.Addlocal(player_detail);
+                    }
+                }
+                //정렬
+                RankCompare();
+                //디스플레이 출력용
+                for(let i in INFO.getLocal()){
+                    addTR(parseInt(i)+1, INFO.getLocal()[i].name, INFO.getLocal()[i].time, INFO.getLocal()[i].score);
+                }
+            }
+        }
+    
+        //랭킹관련
+        function openRenk(){
+            RankUpdate();
+            Rankbox.style.display = "block";
+        }
+
+
+        function RankUpdate(){
+            let leng;
+            let player_detail;
+            let Noraml = 0;
+            let Challenge = 0;
+            for(let i = 0; i<localStorage.length; i++){
+                if(Player.getMode() === "NormalMode"){
+                    if(localStorage.key(i).substring(0, 10) === "NormalMode"){
+                        Noraml++;
+                    }
+                } else {
+                    if(localStorage.key(i).substring(0, 13) === "ChallengeMode"){
+                        Challenge++;
+                    }
+                }
+            }
+    
+            //모드에 따라 랭크 다르게 저장
+            if(Player.getMode() === "NormalMode"){
+                leng = Noraml;
+                localStorage.setItem("NormalMode"+(leng+1), JSON.stringify(Player));
+            } else {
+                leng = Challenge;
+                localStorage.setItem("ChallengeMode"+(leng+1), JSON.stringify(Player));
+            }
+            AddLocal(leng, Player.getMode());
+        }
+
+        function AddLocal(leng, mode){
+            let player_detail= JSON.parse(localStorage.getItem(mode+(leng+1)));
+            let player_name_save = Player.getName();
+            INFO.Addlocal(player_detail);
+            
+            if(INFO.getLocal().length == 11){
+                RankCompare();
+                INFO.popLocal();
+                localStorage.removeItem(mode+"11");
+            } else {
+                addTR(leng+1, INFO.getLocal()[leng].name, INFO.getLocal()[leng].time, INFO.getLocal()[leng].score);
+                RankCompare();
+            }
+            for(let i in INFO.getLocal()){
+                ChangeRank(parseInt(i)+1, INFO.getLocal()[i].name, INFO.getLocal()[i].time, INFO.getLocal()[i].score);
+                Player.setName(INFO.getLocal()[i].name);
+                Player.setTime(INFO.getLocal()[i].time);
+                Player.setScore(INFO.getLocal()[i].score);
+                localStorage.setItem(mode+(parseInt(i)+1), JSON.stringify(Player));
+            }
+            Player.setName(player_name_save);
+        }
+
+        function RankCompare(){
+            if(Player.getMode() === "NormalMode"){
+                INFO.getLocal().sort(function(a, b){
+                    return a.time-b.time;
+                });
+            } else {
+                INFO.getLocal().sort(function(a, b){
+                    return b.score-a.score;
+                });
+
+                INFO.getLocal().sort(function(a, b){
+                    if(a.score === b.score){
+                        return a.time-b.time;
+                    }
+                });
+            }
+        }
+
+        function addTR(id, v1, v2, v3){
+            let tr = document.createElement("tr");
+            let td = document.createElement("td");
+            
+            tr.setAttribute("id", "tr"+id);
+            //순위
+            td.setAttribute("id", "list_Rank"+id);
+            td.innerHTML = ""+id;
+            tr.appendChild(td);
+
+            td = document.createElement("td");
+            //이름
+            td.setAttribute("id", "list_name"+id);
+            td.innerHTML = v1;
+            tr.appendChild(td);
+
+            td = document.createElement("td");
+            //시간
+            td.setAttribute("id", "list_time"+id);
+            if(parseInt(v2) >= 60){
+                mtime = parseInt(v2)/60 < 10 ? "0"+(Math.floor(parseInt(v2)/60)) : Math.floor(parseInt(v2)/60);
+                stime = parseInt(v2) - (60*mtime) < 10 ? "0"+(parseInt(v2) - (60*mtime)) : parseInt(v2) - (60*mtime);
+            } else {
+                mtime = "00"
+                stime = parseInt(v2) < 10 ? "0"+parseInt(v2) : parseInt(v2);
+            }
+            td.innerHTML = mtime+":"+stime;
+            tr.appendChild(td);
+
+            td = document.createElement("td");
+            //점수
+            td.setAttribute("id", "list_score"+id);
+            td.innerHTML = v3;
+            tr.appendChild(td);
+
+            tbody.item(0).appendChild(tr);
+        }
+
+        function ChangeRank(id, v1, v2, v3){
+            let Name = document.getElementById("list_name"+id);
+            let Time = document.getElementById("list_time"+id);
+            let Score = document.getElementById("list_score"+id);
+            Name.innerHTML = v1;
+
+            if(parseInt(v2) >= 60){
+                mtime = parseInt(v2)/60 < 10 ? "0"+(Math.floor(parseInt(v2)/60)) : Math.floor(parseInt(v2)/60);
+                stime = parseInt(v2) - (60*mtime) < 10 ? "0"+(parseInt(v2) - (60*mtime)) : parseInt(v2) - (60*mtime);
+            } else {
+                mtime = "00"
+                stime = parseInt(v2) < 10 ? "0"+parseInt(v2) : parseInt(v2);
+            }
+
+            Time.innerHTML = mtime+":"+stime;
+            Score.innerHTML = v3;
+        }
+
+        function reset(){
+            let score = document.getElementById("score");
+            let time = document.getElementById("time");
+
+            if(document.getElementById(c_deck[0].getCard()) == null){
+                console.log("리셋 불가");
+                return;
+            } else {
+                shuffle();
+            }
+            let cc = 0;
+            for(let i = 0; i<c_deck.length; i++){
+                c_deck[i].setStatus(0);
+                c_deck[i].setClear(false);
+
+                //힌트카드 클래스 제거용도
+
+                imgs[i].id = c_deck[i].getCard();
+                imgs[i].setAttribute("src", `./card_img/${c_deck[i].getImgNum()}.png`);
+            }
+            console.log(cc)
+            Player.setHintcount(5);
+            chance_count.innerHTML = "x "+Player.getHintcount();
+            //점수 초기화
+            Player.setBefore(-1);
+            Player.setScore(0);
+            score.innerHTML = "x "+Player.getScore();
+            //시간 초기화
+            Timer.setMinute(0);
+            Timer.setSecond(0);
+            Timestop();
+            time.innerHTML = "00:00";
+            StartDelay(3000);
+        }
+    </script>
+</body>
+</html>
