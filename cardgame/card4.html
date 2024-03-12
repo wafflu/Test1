@@ -432,7 +432,7 @@
                 imgs[card2].setAttribute("src", `./card_img/${c_deck[card2].getImgNum()}.png`);
                 Player.setScore(Player.getScore()+1);
                 score_tag.innerHTML = "x "+Player.getScore();
-                if(Player.getScore() == 2){
+                if(Player.getScore() == 26){
                     clear();
                 }
             } else {
@@ -704,8 +704,6 @@
             for(let i = 0; i<c_deck.length; i++){
                 c_deck[i].setStatus(0);
                 c_deck[i].setClear(false);
-
-                //힌트카드 클래스 제거용도
 
                 imgs[i].id = c_deck[i].getCard();
                 imgs[i].setAttribute("src", `./card_img/${c_deck[i].getImgNum()}.png`);
