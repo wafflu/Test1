@@ -362,12 +362,13 @@
                         ) {
                             if(!c_deck[i].getClear()){
                                 let hintcard = document.getElementById(c_deck[i].getCard());
+                                //힌트카운트 다운
                                 if(!hintcard.getAttribute("class").includes("hintcard")){
                                     Player.setHintcount(parseInt(Player.getHintcount()) - 1);
                                     chance_count.innerHTML = "x "+Player.getHintcount();
                                 }
-
-                                hintcard.classList.add("hintcard");
+                                addscore(Player.getBefore(), i);
+                                // hintcard.classList.add("hintcard");
                                 break;
                             }
                         }
@@ -424,14 +425,8 @@
 
         //카드 체크용
         function checkCard(card1, card2){
-            let score_tag = document.getElementById("score");
             if((c_deck[card1].getColor() == c_deck[card2].getColor()) && (c_deck[card1].cardNum() == c_deck[card2].cardNum())){
-                c_deck[card1].setClear(true);
-                c_deck[card2].setClear(true);
-                c_deck[card2].setStatus(1);
-                imgs[card2].setAttribute("src", `./card_img/${c_deck[card2].getImgNum()}.png`);
-                Player.setScore(Player.getScore()+1);
-                score_tag.innerHTML = "x "+Player.getScore();
+                addscore(card1, card2);
                 if(Player.getScore() == 26){
                     clear();
                 }
@@ -439,6 +434,17 @@
                 c_deck[card1].setStatus(0);
                 Timeout2(500, card1, card2);
             }
+            Player.setBefore(-1);
+        }
+
+        function addscore(card1, card2){
+            let score_tag = document.getElementById("score");
+            c_deck[card1].setClear(true);
+            c_deck[card2].setClear(true);
+            c_deck[card2].setStatus(1);
+            imgs[card2].setAttribute("src", `./card_img/${c_deck[card2].getImgNum()}.png`);
+            Player.setScore(Player.getScore()+1);
+            score_tag.innerHTML = "x "+Player.getScore();
             Player.setBefore(-1);
         }
 
