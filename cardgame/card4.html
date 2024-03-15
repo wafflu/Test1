@@ -466,7 +466,7 @@
             INFO.setStart(true);
             if(Player.getMode() !== "NormalMode"){
                 TIMER.innerHTML = "03:00";
-                Timer.setMinute(1);
+                Timer.setMinute(3);
                 Timer.setSecond(0);
             }
             setTimeout(() => {
@@ -490,7 +490,7 @@
                 } else {
                     if(Timer.getSecond() == 0){
                         Timer.setMinute(Timer.getMinute()-1);
-                        Timer.setSecond(60); 
+                        Timer.setSecond(60);
                     }
                     Timer.setSecond(Timer.getSecond()-1); 
                     if(Timer.getMinute() == 0 && Timer.getSecond() == 0){
